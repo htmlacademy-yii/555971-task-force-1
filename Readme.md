@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Мария Балуева](https://up.htmlacademy.ru/yii/1/user/555971).
-* Наставник: `Кексобот`.
+* Наставник: [Денис Ходаковский](https://htmlacademy.ru/profile/id1232355).
 
 ---
 
