@@ -59,25 +59,56 @@ class Task
         return self::$actions;
     }
 
-    public function getNextStatus($action)
+    public static function getValidStatus($action)
     {
-        if ($this->status == self::STATUS_NEW  &&  $action == self::ACTION_CANCEL) {
-            return self::STATUS_CANCELED;
-        } elseif ($this->status == self::STATUS_NEW  &&  $action == self::ACTION_RESPOND) {
-            return $this->status;
-        } elseif ($this->status == self::STATUS_NEW  &&  $action == self::ACTION_ASSIGN_DOER) {
-            return self::STATUS_IN_PROGRESS;
-        } elseif ($this->status == self::STATUS_IN_PROGRESS  &&  $action == self::ACTION_FAIL) {
-            return self::STATUS_FAILED;
-        } elseif ($this->status == self::STATUS_IN_PROGRESS  && $action == self::ACTION_MARK_DONE) {
-            return self::STATUS_DONE;
-        } else {
-            return null;
+        switch ($action) {
+            case self::ACTION_CANCEL:
+                return self::STATUS_NEW;
+                break;
+            case self::ACTION_RESPOND:
+                return self::STATUS_NEW;
+                break;
+            case self::ACTION_ASSIGN_DOER:
+                return self::STATUS_NEW;
+                break;
+            case self::ACTION_FAIL:
+                return self::STATUS_IN_PROGRESS;
+                break;
+            case self::ACTION_MARK_DONE:
+                return self::STATUS_IN_PROGRESS;
+                break;
+            default:
+                //throw new Exception('not existing action');
+                return null;
         }
     }
 
-    public function getStatus()
+    public function getNextStatus($action)
     {
-        return $this->status;
+        if ($this->status == Task::getValidStatus($action)) {
+            switch ($action){
+                case self::ACTION_CANCEL:
+                    return self::STATUS_CANCELED;
+                    break;
+                case self::ACTION_RESPOND:
+                    return self::STATUS_NEW;
+                    break;
+                case self::ACTION_ASSIGN_DOER:
+                    return self::STATUS_IN_PROGRESS;
+                    break;
+                case self::ACTION_FAIL:
+                    return self::STATUS_FAILED;
+                    break;
+                case self::ACTION_MARK_DONE:
+                    return self::STATUS_DONE;
+                    break;
+                default:
+                    //throw new Exception('not existing action');
+                    return null;
+            }
+        } else {
+            //throw new Exception('not valid action');
+            return null;
+        }
     }
 }

@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 $task1 = new Task(1, Task::STATUS_NEW);
 
 assert($task1->getNextStatus(Task::ACTION_CANCEL) == Task::STATUS_CANCELED, 'new, cancel');
-assert($task1->getNextStatus(Task::ACTION_RESPOND) == $task1->getStatus() , 'new, respond');
+assert($task1->getNextStatus(Task::ACTION_RESPOND) == Task::STATUS_NEW , 'new, respond');
 assert($task1->getNextStatus(Task::ACTION_ASSIGN_DOER) == Task::STATUS_IN_PROGRESS, 'new, assign doer');
 
 assert($task1->getNextStatus(Task::ACTION_FAIL) == null, 'new, fail');
