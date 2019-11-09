@@ -17,15 +17,12 @@ class Task
     const ACTION_FAIL = 'fail';
     const ACTION_MARK_DONE = 'mark done';
 
+    //TODO пока нигде не используется
     const ROLE_OWNER = 'owner';
     const ROLE_DOER = 'doer';
 
-    private $owner_id;
-    private $doer_id;
-    private $status;
-    private $tm_expire;
-
-    private static $statuses = [
+    //TODO пока нигде не используется
+    const ALL_STATUSES = [
         self::STATUS_NEW,
         self::STATUS_CANCELED,
         self::STATUS_IN_PROGRESS,
@@ -33,82 +30,76 @@ class Task
         self::STATUS_DONE
     ];
 
-    private static $actions = [
-        self::ACTION_CANCEL,
-        self::ACTION_RESPOND,
-        self::ACTION_ASSIGN_DOER,
-        self::ACTION_FAIL,
-        self::ACTION_MARK_DONE
+    const VALID_STATUSES = [
+        self::ACTION_CANCEL => self::STATUS_NEW,
+        self::ACTION_RESPOND => self::STATUS_NEW,
+        self::ACTION_ASSIGN_DOER => self::STATUS_NEW,
+        self::ACTION_FAIL => self::STATUS_IN_PROGRESS,
+        self::ACTION_MARK_DONE => self::STATUS_IN_PROGRESS,
     ];
 
-    public function __construct($owner_id, $status, $tm_expire=null, $doer_id=null)
+    const NEXT_STATUSES = [
+        self::ACTION_CANCEL => self::STATUS_CANCELED,
+        self::ACTION_RESPOND => self::STATUS_NEW,
+        self::ACTION_ASSIGN_DOER => self::STATUS_IN_PROGRESS,
+        self::ACTION_FAIL => self::STATUS_FAILED,
+        self::ACTION_MARK_DONE => self::STATUS_DONE
+    ];
+
+    private $status;
+
+    //TODO пока нигде не используются
+    private $owner_id;
+    private $doer_id;
+    private $expires_at;
+
+
+    public function __construct(array $properties)
     {
-        $this->owner_id = $owner_id;
-        $this->doer_id = $doer_id;
-        $this->status = $status;
-        $this->tm_expire = $tm_expire;
+        foreach ($properties as $name => $value) {
+
+            if (property_exists(get_class($this), $name)) {
+                $this->{$name} = $value;
+            }
+
+        }
     }
 
+    //TODO пока нигде не используется
     public static function getAllStatuses()
     {
-        return self::$statuses;
+        return self::ALL_STATUSES;
     }
+
 
     public static function getAllActions()
     {
-        return self::$actions;
+
+        return array_keys(self::VALID_STATUSES);
+
     }
 
-    public static function getValidStatus($action)
+
+    private function isValidAction($action)
     {
-        switch ($action) {
-            case self::ACTION_CANCEL:
-                return self::STATUS_NEW;
-                break;
-            case self::ACTION_RESPOND:
-                return self::STATUS_NEW;
-                break;
-            case self::ACTION_ASSIGN_DOER:
-                return self::STATUS_NEW;
-                break;
-            case self::ACTION_FAIL:
-                return self::STATUS_IN_PROGRESS;
-                break;
-            case self::ACTION_MARK_DONE:
-                return self::STATUS_IN_PROGRESS;
-                break;
-            default:
-                //throw new Exception('not existing action');
-                return null;
-        }
+        $allActions = self::getAllActions();
+        $validStatus = self::VALID_STATUSES[$action] ?? null;
+
+        return (in_array($action, $allActions) &&  $this->status==$validStatus);
     }
 
+    //TODO пока нигде не используется
     public function getNextStatus($action)
     {
-        if ($this->status == Task::getValidStatus($action)) {
-            switch ($action){
-                case self::ACTION_CANCEL:
-                    return self::STATUS_CANCELED;
-                    break;
-                case self::ACTION_RESPOND:
-                    return self::STATUS_NEW;
-                    break;
-                case self::ACTION_ASSIGN_DOER:
-                    return self::STATUS_IN_PROGRESS;
-                    break;
-                case self::ACTION_FAIL:
-                    return self::STATUS_FAILED;
-                    break;
-                case self::ACTION_MARK_DONE:
-                    return self::STATUS_DONE;
-                    break;
-                default:
-                    //throw new Exception('not existing action');
-                    return null;
-            }
+        if ($this->isValidAction($action)) {
+
+            return self::NEXT_STATUSES[$action];
+
         } else {
-            //throw new Exception('not valid action');
-            return null;
+
+            throw new Exception('"' . $action. '" is not valid action for status "'. $this->status. '"');
+
         }
     }
+
 }
