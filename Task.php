@@ -53,53 +53,58 @@ class Task
     private $doer_id;
     private $expires_at;
 
-
     public function __construct(array $properties)
     {
         foreach ($properties as $name => $value) {
-
-            if (property_exists(get_class($this), $name)) {
+            if (property_exists($this, $name)) {
                 $this->{$name} = $value;
             }
-
         }
     }
 
-    //TODO пока нигде не используется
     public static function getAllStatuses()
     {
         return self::ALL_STATUSES;
     }
 
-
     public static function getAllActions()
     {
-
         return array_keys(self::VALID_STATUSES);
-
     }
 
+    private function isStatusExist()
+    {
+        $allStatuses = self::getAllStatuses();
+        return in_array($this->status, $allStatuses);
+    }
 
-    private function isValidAction($action)
+    private function isActionExist($action)
     {
         $allActions = self::getAllActions();
-        $validStatus = self::VALID_STATUSES[$action] ?? null;
+        return in_array($action, $allActions);
+    }
 
-        return (in_array($action, $allActions) &&  $this->status==$validStatus);
+    private function isValidStatus($action)
+    {
+        $validStatus = self::VALID_STATUSES[$action] ?? null;
+        return ($this->status == $validStatus);
     }
 
     //TODO пока нигде не используется
     public function getNextStatus($action)
     {
-        if ($this->isValidAction($action)) {
-
-            return self::NEXT_STATUSES[$action];
-
+        if ($this->isStatusExist()) {
+            if ($this->isActionExist($action)) {
+                if ($this->isValidStatus($action)) {
+                    return self::NEXT_STATUSES[$action];
+                } else {
+                    throw new Exception("`{$action}` is not valid action for status `{$this->status}`");
+                }
+            } else {
+                throw new Exception("action `{$action}` not exist");
+            }
         } else {
-
-            throw new Exception('"' . $action. '" is not valid action for status "'. $this->status. '"');
-
+            throw new Exception("status `{$this->status}` not exist");
         }
     }
-
 }
