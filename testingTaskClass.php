@@ -26,5 +26,6 @@ assert($task2->getNextStatus(Task::ACTION_MARK_DONE) == Task::STATUS_DONE, 'in p
 
 //assert($task2->getNextStatus(Task::ACTION_ASSIGN_DOER) == null, 'in_progress, assign doer');
 
-//$task3 = new Task(['status' => 'foo']);
-//assert($task3->getNextStatus(Task::ACTION_CANCEL) == Task::STATUS_CANCELED, 'new, cancel');
+/*
+$task3 = new Task(['status' => 'foo']);
+assert($task3->getNextStatus(Task::ACTION_CANCEL) == Task::STATUS_CANCELED, 'new, cancel');*/

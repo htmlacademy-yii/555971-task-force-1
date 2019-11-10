@@ -21,7 +21,6 @@ class Task
     const ROLE_OWNER = 'owner';
     const ROLE_DOER = 'doer';
 
-    //TODO пока нигде не используется
     const ALL_STATUSES = [
         self::STATUS_NEW,
         self::STATUS_CANCELED,
@@ -53,6 +52,11 @@ class Task
     private $doer_id;
     private $expires_at;
 
+    /**
+     * Task constructor.
+     *
+     * @param array $properties
+     */
     public function __construct(array $properties)
     {
         foreach ($properties as $name => $value) {
@@ -62,49 +66,76 @@ class Task
         }
     }
 
+    /**
+     * Return all statuses
+     *
+     * @return array
+     */
     public static function getAllStatuses()
     {
         return self::ALL_STATUSES;
     }
 
+    /**
+     * Return all actions
+     *
+     * @return array
+     */
     public static function getAllActions()
     {
         return array_keys(self::VALID_STATUSES);
     }
 
-    private function isStatusExist()
+    /**
+     * Check current status exists
+     *
+     * @return bool
+     */
+    private function isStatusExists()
     {
-        $allStatuses = self::getAllStatuses();
-        return in_array($this->status, $allStatuses);
+        return in_array($this->status, self::getAllStatuses());
     }
 
-    private function isActionExist($action)
+    /**
+     * Check action exists
+     *
+     * @param string $action
+     * @return bool
+     */
+    private function isActionExists($action)
     {
-        $allActions = self::getAllActions();
-        return in_array($action, $allActions);
+        return in_array($action, self::getAllActions());
     }
 
-    private function isValidStatus($action)
+    /**
+     * Validate action depend on current status
+     *
+     * @param string $action
+     * @return bool
+     */
+    private function isValidAction($action)
     {
         $validStatus = self::VALID_STATUSES[$action] ?? null;
         return ($this->status == $validStatus);
     }
 
     //TODO пока нигде не используется
+    /**
+     * @param $action
+     * @return mixed
+     * @throws Exception
+     */
     public function getNextStatus($action)
     {
-        if ($this->isStatusExist()) {
-            if ($this->isActionExist($action)) {
-                if ($this->isValidStatus($action)) {
-                    return self::NEXT_STATUSES[$action];
-                } else {
-                    throw new Exception("`{$action}` is not valid action for status `{$this->status}`");
-                }
-            } else {
-                throw new Exception("action `{$action}` not exist");
-            }
-        } else {
+        if (!$this->isStatusExists()) {
             throw new Exception("status `{$this->status}` not exist");
         }
+        if (!$this->isActionExists($action)) {
+            throw new Exception("action `{$action}` not exist");
+        }
+        if (!$this->isValidAction($action)) {
+            throw new Exception("`{$action}` is not valid action for status `{$this->status}`");
+        }
+        return self::NEXT_STATUSES[$action];
     }
 }
