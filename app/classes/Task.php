@@ -1,5 +1,8 @@
 <?php
 
+namespace App\classes;
+use \Exception;
+
 /**
  * Class Task
  */
