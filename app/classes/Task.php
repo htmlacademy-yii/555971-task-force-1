@@ -10,7 +10,7 @@ class Task
 {
     const STATUS_NEW = 'new';
     const STATUS_CANCELED = 'canceled';
-    const STATUS_IN_PROGRESS = 'in progress';
+    const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_FAILED = 'failed';
     const STATUS_DONE = 'done';
 
