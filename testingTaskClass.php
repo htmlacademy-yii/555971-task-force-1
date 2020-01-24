@@ -20,12 +20,12 @@ assert($task1->getNextStatus(Task::ACTION_ASSIGN_DOER) == Task::STATUS_IN_PROGRE
 
 $task2 = new Task(['status' => Task::STATUS_IN_PROGRESS]);
 
-assert($task2->getNextStatus(Task::ACTION_FAIL) == Task::STATUS_FAILED, 'in_progress, fail');
-assert($task2->getNextStatus(Task::ACTION_MARK_DONE) == Task::STATUS_DONE, 'in_progress, mark done');
+assert($task2->getNextStatus(Task::ACTION_FAIL) == Task::STATUS_FAILED, 'in progress, fail');
+assert($task2->getNextStatus(Task::ACTION_MARK_DONE) == Task::STATUS_DONE, 'in_progress, complete');
 
-//assert($task2->getNextStatus('bar') == Task::STATUS_DONE, 'in progress, mark done');
+//assert($task2->getNextStatus('bar') == Task::STATUS_DONE, 'in progress, complete');
 
-//assert($task2->getNextStatus(Task::ACTION_ASSIGN_DOER) == null, 'in_progress, assign doer');
+//assert($task2->getNextStatus(Task::ACTION_ASSIGN_DOER) == null, 'in progress, assign doer');
 
 /*
 $task3 = new Task(['status' => 'foo']);
