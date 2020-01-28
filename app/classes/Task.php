@@ -10,15 +10,15 @@ class Task
 {
     const STATUS_NEW = 'new';
     const STATUS_CANCELED = 'canceled';
-    const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_IN_PROGRESS = 'in progress';
     const STATUS_FAILED = 'failed';
-    const STATUS_DONE = 'done';
+    const STATUS_DONE = 'completed';
 
     const ACTION_CANCEL = 'cancel';
     const ACTION_RESPOND = 'respond';
     const ACTION_ASSIGN_DOER = 'assign doer';
     const ACTION_FAIL = 'fail';
-    const ACTION_MARK_DONE = 'mark done';
+    const ACTION_MARK_DONE = 'complete';
 
     //TODO пока нигде не используется
     const ROLE_OWNER = 'owner';
